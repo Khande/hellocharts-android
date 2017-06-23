@@ -481,7 +481,7 @@ public class LineChartRenderer extends AbstractChartRenderer {
         }
 
         final Rect contentRect = computator.getContentRectMinusAllMargins();
-        final float baseRawValue = Math.min(contentRect.bottom, Math.max(computator.computeRawY(baseValue),
+        final float baseRawValue = Math.min(contentRect.bottom, Math.max(computator.computeRawY(line.getYOffset()),
                 contentRect.top));
         //That checks works only if the last point is the right most one.
         final float left = Math.max(computator.computeRawX(line.getValues().get(0).getX()), contentRect.left);

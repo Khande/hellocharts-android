@@ -37,6 +37,17 @@ public class Line {
     private LineChartValueFormatter formatter = new SimpleLineChartValueFormatter();
     private List<PointValue> values = new ArrayList<PointValue>();
 
+    private int yOffset = 0;
+
+    public int getYOffset() {
+        return yOffset;
+    }
+
+    public Line setYOffset(int yOffset) {
+        this.yOffset = yOffset;
+        return this;
+    }
+
     public Line() {
 
     }
@@ -61,6 +72,7 @@ public class Line {
         this.shape = line.shape;
         this.pathEffect = line.pathEffect;
         this.formatter = line.formatter;
+        this.yOffset = line.yOffset;
 
         for (PointValue pointValue : line.values) {
             this.values.add(new PointValue(pointValue));

@@ -4,6 +4,11 @@
     tools:context="lecho.lib.hellocharts.samples.LineChartActivity" >
 
     <item
+        android:id="@+id/action_custom_chart"
+        android:title="Custom chart"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_reset"
         android:title="Reset chart"
         app:showAsAction="never"/>

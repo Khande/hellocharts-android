@@ -1,5 +1,6 @@
 package lecho.lib.hellocharts.samples;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +19,7 @@ import lecho.lib.hellocharts.animation.ChartAnimationListener;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
@@ -73,14 +75,15 @@ public class LineChartActivity extends ActionBarActivity {
             chart.setOnValueTouchListener(new ValueTouchListener());
 
             // Generate some randome values.
-            generateValues();
-
-            generateData();
+            // generateValues();
+            //
+            // generateData();
+            customChart();
 
             // Disable viewpirt recalculations, see toggleCubic() method for more info.
-            chart.setViewportCalculationEnabled(false);
+            // chart.setViewportCalculationEnabled(false);
 
-            resetViewport();
+            // resetViewport();
 
             return rootView;
         }
@@ -173,8 +176,88 @@ public class LineChartActivity extends ActionBarActivity {
                 chart.setZoomType(ZoomType.VERTICAL);
                 return true;
             }
+            if (id == R.id.action_custom_chart) {
+                customChart();
+                return true;
+            }
+
+
             return super.onOptionsItemSelected(item);
         }
+
+        private void customChart() {
+            int[] level = new int[]{0, 4, 8, 12, 16};
+            List<Line> lines = new ArrayList<>();
+            for (int i = 0; i < level.length; ++i) {
+                List<PointValue> values = new ArrayList<>();
+                for (int j = 0; j < 10; ++j) {
+                    values.add(new PointValue(j, level[i]));
+                }
+
+                Line dividerLine = new Line(values);
+                dividerLine.setColor(ChartUtils.COLORS[i]);
+                dividerLine.setYOffset(level[i] + 4);
+                dividerLine.setAreaTransparency(0xFF);
+                dividerLine.setStrokeWidth(0);
+                dividerLine.setHasPoints(false);
+                dividerLine.setFilled(true);
+                dividerLine.setHasLines(true);
+                dividerLine.setCubic(false);
+                dividerLine.setHasLabels(false);
+                lines.add(dividerLine);
+            }
+
+            final List<PointValue> pointValues = new ArrayList<>();
+            pointValues.add(new PointValue(0, 12.1f));
+            pointValues.add(new PointValue(1, 10.1f));
+            pointValues.add(new PointValue(2, 3.5f));
+            pointValues.add(new PointValue(3, 13.5f));
+            pointValues.add(new PointValue(4, 3.0f));
+
+            Line dataLine = new Line(pointValues);
+            dataLine.setColor(Color.parseColor("#FF0000"));
+            dataLine.setStrokeWidth(2);
+            dataLine.setHasPoints(true);
+            dataLine.setShape(ValueShape.CIRCLE);
+            dataLine.setPointRadius(4);
+            dataLine.setFilled(false);
+            dataLine.setHasLines(true);
+            dataLine.setCubic(false);
+            dataLine.setHasLabels(false);
+            dataLine.setHasLabelsOnlyForSelected(true);
+            lines.add(dataLine);
+
+
+            data = new LineChartData(lines);
+
+            if (hasAxes) {
+                Axis axisX = new Axis();
+                Axis axisY = new Axis();
+                List<AxisValue> axisValues = new ArrayList<>();
+                axisValues.add(new AxisValue(0));
+                axisValues.add(new AxisValue(4));
+                axisValues.add(new AxisValue(8));
+                axisValues.add(new AxisValue(12));
+                axisValues.add(new AxisValue(16));
+                axisY.setValues(axisValues);
+                if (hasAxesNames) {
+                    axisX.setName("Axis X");
+                    axisY.setName("Axis Y");
+                }
+                data.setAxisXBottom(axisX);
+                data.setAxisYLeft(axisY);
+            } else {
+                data.setAxisXBottom(null);
+                data.setAxisYLeft(null);
+            }
+
+            data.setBaseValue(0);
+            chart.setZoomEnabled(false);//disable zoom
+            chart.setValueSelectionEnabled(true);
+            chart.setLineChartData(data);
+
+        }
+
 
         private void generateValues() {
             for (int i = 0; i < maxNumberOfLines; ++i) {
